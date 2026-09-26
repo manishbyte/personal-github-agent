@@ -11,6 +11,10 @@ GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = os.getenv("GITHUB_REDIRECT_URI")
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 if not GITHUB_CLIENT_ID:
     raise RuntimeError(
@@ -61,10 +65,7 @@ def get_github_authorization_url(
     return f"{GITHUB_AUTHORIZE_URL}?{query}"
 
 
-async def exchange_code_for_token(
-    code: str,
-) -> dict:
-
+async def exchange_code_for_token(code: str) -> dict:
     data = {
         "client_id": GITHUB_CLIENT_ID,
         "client_secret": GITHUB_CLIENT_SECRET,
@@ -77,7 +78,6 @@ async def exchange_code_for_token(
     }
 
     async with httpx.AsyncClient() as client:
-
         response = await client.post(
             GITHUB_ACCESS_TOKEN_URL,
             data=data,
@@ -85,8 +85,20 @@ async def exchange_code_for_token(
         )
 
         response.raise_for_status()
+        token_data = response.json()
 
-        return response.json()
+        # Log the OAuth error without exposing credentials or tokens.
+        if not token_data.get("access_token"):
+            logger.error(
+                "GitHub OAuth token exchange failed: error=%s, description=%s",
+                token_data.get("error", "unknown_error"),
+                token_data.get(
+                    "error_description",
+                    "No error description provided",
+                ),
+            )
+
+        return token_data
 
 
 async def get_github_user(
