@@ -1,15 +1,29 @@
-langgraph>=0.4
-langchain-core
-langchain-groq
-mcp
-httpx
-python-dotenv
-pydantic>=2
-fastapi
-uvicorn
 
+# FastAPI backend
+fastapi
+uvicorn[standard]
+
+# Streamlit frontend
+streamlit
+
+# Environment configuration
+python-dotenv
+pydantic-settings
+
+# Database: PostgreSQL + async SQLAlchemy
 sqlalchemy[asyncio]
 asyncpg
 
-# tests
-pytest
+# GitHub OAuth and HTTP requests
+authlib
+httpx
+itsdangerous
+
+# LangGraph and LangChain
+langgraph
+langchain-core
+langchain-groq
+langchain-mcp-adapters
+
+# Model Context Protocol
+mcp
