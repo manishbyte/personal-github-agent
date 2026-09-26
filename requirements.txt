@@ -1,0 +1,15 @@
+langgraph>=0.4
+langchain-core
+langchain-groq
+mcp
+httpx
+python-dotenv
+pydantic>=2
+fastapi
+uvicorn
+
+sqlalchemy[asyncio]
+asyncpg
+
+# tests
+pytest
